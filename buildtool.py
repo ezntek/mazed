@@ -13,7 +13,6 @@ RESPONSE_LOOKUP = {
     0 : "success"
 }
 
-
 def main() -> int:
     for task in sys.argv:
         if task == "build":
