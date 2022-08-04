@@ -1,0 +1,4 @@
+github.com/gen2brain/raylib-go/raylib v0.0.0-20220702153720-2ba84634ed1e h1:e/GRIyVh+q0SSASTNZ7Ns/mfG4TCb+cvVCFow2es42M=
+github.com/gen2brain/raylib-go/raylib v0.0.0-20220702153720-2ba84634ed1e/go.mod h1:+NbsqGlEQqGqrsgJFF5Yj2dkvn0ML2SQb8RqM2hJsPU=
+github.com/tek967/rgbapalette v0.0.0-20220724015502-5cd92fbe69d5 h1:EPuTG+tFFm4F2ZywN+dHSetBbCUF3huyCb8Ix/jzJWE=
+github.com/tek967/rgbapalette v0.0.0-20220724015502-5cd92fbe69d5/go.mod h1:boGqsiMOEY6sWqo97msWGeuVkYT6g4EnSJ35Yn0ykro=
