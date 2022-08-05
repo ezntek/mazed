@@ -13,7 +13,7 @@ const (
 )
 
 var theBall *ball.Ball = ball.New(rl.NewVector2(50, 50), 20, rl.Black)
-var blocks = []block.Block{*block.New(rl.NewVector2(300, 300), rl.NewVector2(100, 100))}
+var blocks = []block.Block{*block.New(rl.NewVector2(0, 300), rl.NewVector2(100, 100))}
 
 func beforeLoopSetup() {
 	rl.InitWindow(width, height, "wow game")
