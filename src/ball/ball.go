@@ -4,6 +4,7 @@ import (
 	"image/color"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
+	"github.com/tek967/mazed/src/block"
 )
 
 type movingInDirection struct {
@@ -63,7 +64,7 @@ func (b *Ball) collision(sw, sh int32) {
 	}
 }
 
-func (b *Ball) Update(sw, sh int32) {
+func (b *Ball) Update(sw, sh int32, blockList *[]block.Block) {
 	b.collision(sw, sh)
 
 	if !b.direction.up && !b.direction.down && !b.direction.left && !b.direction.right {
