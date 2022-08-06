@@ -1,7 +1,6 @@
 package ball
 
 import (
-	"fmt"
 	"image/color"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -28,24 +27,11 @@ func (b *Ball) Draw() {
 }
 
 func (b *Ball) collisionWithBlock(block *block.Block) string {
-	if rl.CheckCollisionCircleRec(b.Position, b.Radius, block.Rect) {
-		// do some magic to find out which side
-		fmt.Println("COL")
-		if b.Position.X > block.Position.X && b.Position.X < block.Position.X+block.Rect.Width { // within X range
-			if b.Position.Y < block.Position.Y {
-				return "above"
-			} else if b.Position.Y > block.Position.Y+block.Rect.Height {
-				return "below"
-			}
-		} else if b.Position.Y > block.Position.Y && b.Position.Y < block.Position.Y+block.Rect.Height { // within Y range
-			if b.Position.X < block.Position.X {
-				return "left"
-			} else if b.Position.X > block.Position.X+block.Rect.Width {
-				return "right"
-			}
+	var toCheck = [4]string{"left", "right", "up", "down"}
+	for _, check := range toCheck {
+		if block.Collision(check, b.Position, b.Radius) {
+			return check
 		}
-	} else {
-		return "false"
 	}
 	return ""
 }
@@ -101,13 +87,13 @@ func (b *Ball) collision(sw, sh int32, blockList *[]block.Block) {
 				b.Velocity.X = 0
 				b.direction.right = false
 			}
-		case "above":
+		case "up":
 			if b.direction.up {
 				b.Velocity.Y = 0
 				b.direction.right = false
 				b.Position.Y = block.Position.Y - b.Radius
 			}
-		case "below":
+		case "down":
 			if b.direction.down {
 				b.Velocity.Y = 0
 				b.direction.down = false
