@@ -1,6 +1,7 @@
 package ball
 
 import (
+	"fmt"
 	"image/color"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -12,6 +13,7 @@ type movingInDirection struct {
 }
 
 type Ball struct {
+	speed float32
 	direction movingInDirection
 	Position  rl.Vector2
 	Velocity  rl.Vector2
@@ -30,6 +32,7 @@ func (b *Ball) collisionWithBlock(block *block.Block) string {
 	var toCheck = [4]string{"left", "right", "up", "down"}
 	for _, check := range toCheck {
 		if block.Collision(check, b.Position, b.Radius) {
+			fmt.Printf("%s returned true!", check)
 			return check
 		}
 	}
@@ -38,13 +41,13 @@ func (b *Ball) collisionWithBlock(block *block.Block) string {
 
 func (b *Ball) movement() {
 	if b.direction.up {
-		b.Velocity.Y -= 0.05
+		b.Velocity.Y -= b.speed
 	} else if b.direction.down {
-		b.Velocity.Y += 0.05
+		b.Velocity.Y += b.speed
 	} else if b.direction.left {
-		b.Velocity.X -= 0.05
+		b.Velocity.X -= b.speed
 	} else if b.direction.right {
-		b.Velocity.X += 0.05
+		b.Velocity.X += b.speed
 	}
 }
 
@@ -76,25 +79,25 @@ func (b *Ball) collision(sw, sh int32, blockList *[]block.Block) {
 	for _, block := range *blockList {
 		switch b.collisionWithBlock(&block) {
 		case "left":
-			if b.direction.left {
+			if b.direction.right {
 				b.Position.X = block.Position.X - b.Radius
 				b.Velocity.X = 0
 				b.direction.left = false
 			}
 		case "right":
-			if b.direction.right {
+			if b.direction.left {
 				b.Position.X = block.Position.X + block.Rect.Width + b.Radius
 				b.Velocity.X = 0
 				b.direction.right = false
 			}
 		case "up":
-			if b.direction.up {
+			if b.direction.down {
 				b.Velocity.Y = 0
 				b.direction.right = false
 				b.Position.Y = block.Position.Y - b.Radius
 			}
 		case "down":
-			if b.direction.down {
+			if b.direction.up {
 				b.Velocity.Y = 0
 				b.direction.down = false
 				b.Position.Y = block.Position.Y + block.Rect.Height + b.Radius
@@ -104,8 +107,6 @@ func (b *Ball) collision(sw, sh int32, blockList *[]block.Block) {
 }
 
 func (b *Ball) Update(sw, sh int32, blockList *[]block.Block) {
-	b.collision(sw, sh, blockList)
-
 	if !b.direction.up && !b.direction.down && !b.direction.left && !b.direction.right {
 		if rl.IsKeyPressed(rl.KeyUp) {
 			b.direction.up = true
@@ -120,14 +121,17 @@ func (b *Ball) Update(sw, sh int32, blockList *[]block.Block) {
 			b.direction.right = true
 		}
 	}
-
 	b.movement()
-	b.Position.X += b.Velocity.X
-	b.Position.Y += b.Velocity.Y
+	
+	for quarterStep := 0; quarterStep < 4; quarterStep++ {
+		b.collision(sw, sh, blockList)
+		b.Position.X += b.Velocity.X*0.25
+		b.Position.Y += b.Velocity.Y*0.25
+	}
 }
-
 func New(pos rl.Vector2, rad float32, color color.RGBA) *Ball {
 	return &Ball{
+		speed: 0.005,
 		Position: pos,
 		Radius:   rad,
 		Color:    color,
